@@ -7,15 +7,15 @@ const renderError=(meta,nextBtnClicked,submitClicked)=>{
 
     const {error,touched}= meta;
 
-    console.log(error,'error')
-    
     if (nextBtnClicked && error) {
+
 
         return <p className='errorMessage mt-3'>{error}</p>
                       
     }
-
+    
     if (submitClicked && error && touched) {
+
 
         return <p className='errorMessage mt-3'>{error}</p>
         
@@ -24,7 +24,6 @@ const renderError=(meta,nextBtnClicked,submitClicked)=>{
     return
 
 }
-
 
 
 export const formSelect=(fieldProps)=>{
@@ -39,7 +38,7 @@ export const formSelect=(fieldProps)=>{
 
     return  (
                 <React.Fragment>           
-                    <select className='fields' {...input} style={{width:'100%', height:'40px', paddingLeft:'10px', boxSizing:'borderBox'}}>
+                    <select className='fields' {...input} style={{width:'100%', height:'40px', paddingLeft:'10px', boxSizing:'border-box'}}>
                     {options()} 
                     </select>
                     {renderError(meta,nextBtnClicked, submitClicked)}
@@ -49,21 +48,20 @@ export const formSelect=(fieldProps)=>{
 }
 
 
-
 export const formInput=(fieldProps)=>{
 
 
     // if (fieldProps.holder) {
 
-        const {input, nextBtnClicked,holder,type,meta, id}=fieldProps;
+        const {input, nextBtnClicked,holder,type,meta, id,submitClicked}=fieldProps;
 
 
          return( 
 
              <React.Fragment>
-                <input className='fields' style={{width:'100%',height:'40px', paddingLeft:'10px', boxSizing:'borderBox'}} {...input} type={type} placeholder={holder} id={id}/>
+                <input className='fields' style={{width:'100%',height:'40px', paddingLeft:'10px', boxSizing:'border-box'}} {...input} type={type} placeholder={holder} id={id}/>
 
-                {renderError(meta, nextBtnClicked)}
+                {renderError(meta, nextBtnClicked,submitClicked)}
             </React.Fragment>
          )
         
@@ -88,18 +86,18 @@ export const formInput=(fieldProps)=>{
 
 //     let imageFile = event.target.files[0];
 
-//     let imageFileString = new FileReader();
+//     let fileAsURL = new FileReader();
 
-//     imageFileString.readAsDataURL(imageFile);
+//     fileAsURL.readAsDataURL(imageFile);
 
-//     imageFileString.onload = ()=>{
-//         var rawLog = imageFileString.result;
+//     fileAsURL.onload = ()=>{
+//         var rawLog = fileAsURL.result;
 //         console.log(rawLog);
 //     };
 
 // }
 
-    // console.log(imageFileString,'imageFileString')
+    // console.log(fileAsURL,'fileAsURL')
    
     // if (imageFile) {
     //   const localImageUrl = URL.createObjectURL(imageFile);
@@ -154,7 +152,7 @@ export const formInput=(fieldProps)=>{
 
 export const FormFileInput =props=>{
 
-    const {name, heading,submitClicked,id,accepted,uploadPics}=props
+    const {name, heading,submitClicked,id,accepted,uploadPics,userId}=props
 
 
     const formFileInput= fieldProps=>{ 
@@ -167,23 +165,27 @@ export const FormFileInput =props=>{
         
             const { input: { onChange } }=fieldProps
         
-            let imageFileString = new FileReader();
+            let fileAsURL = new FileReader();
 
-            imageFileString.readAsDataURL(event.target.files[0]);
+            //let fileAsString= new FileReader();
+
+            fileAsURL.readAsDataURL(event.target.files[0]);
+
+            //console.log(fileAsString.readAsBinaryString(event.target.files[0]),'file')
     
-            imageFileString.onload = event=>{
+            fileAsURL.onload = event=>{
 
                 if (uploadPics) {
-
-                    // console.log(event.target.result,'filePath')
     
                     uploadPics(event.target.result);
+
+                    localStorage.setItem(userId,fileAsURL.result);
 
                     return
                     
                 }
 
-                onChange(imageFileString.result);
+                onChange(fileAsURL.result);
             }; 
         }
     
@@ -236,7 +238,7 @@ export const FormSelect=props=>{
 
 export const FormInput= props=>{
 
-    const{heading, nextBtnClicked,name, type, id}= props
+    const{heading, nextBtnClicked,name, type, id,submitClicked}= props
 
     return(
         
@@ -245,38 +247,53 @@ export const FormInput= props=>{
 
             <label  htmlFor={id} ><h5 style={{color:'grey', fontSize:'16px'}}>{heading}</h5></label>
 
-            <Field nextBtnClicked={nextBtnClicked} name={name} component={formInput} type={type} id={id}/>
+            <Field submitClicked={submitClicked} nextBtnClicked={nextBtnClicked} name={name} component={formInput} type={type} id={id}/>
 
         </React.Fragment>
     )
 }
 
 
-const formCheckBox=(props)=>{
+const formCheckBox=props=>{
 
-    const {input}= props;
+    const {input,userDetails,whenClicked}= props;
 
-    const{name}=input
+    let {name}=input; 
 
-    // console.log(input,'checkBoxInput')
+
+    if (userDetails && Object.keys(userDetails).length && (userDetails[name] && userDetails[name].length)) {
+
+        return(
+
+            <React.Fragment>
+    
+                <input type='checkbox'{...input} defaultChecked name={name} style={{width:'18px', height:'18px'}}/>
+    
+            </React.Fragment>
+        )
+        
+    }
+
 
     return(
         <React.Fragment>
 
-            <input type='checkbox' {...input} name={name} style={{width:'18px', height:'18px'}}/>
+            <input type='checkbox' onClick={whenClicked} {...input} name={name} style={{width:'18px', height:'18px'}}/>
 
         </React.Fragment>
     )
 }
+
 
 export const FormCheckBox= props=>{
 
-    const {name,info, id}= props;
+    const {name,info, id,userDetails,rotationangle,whenClicked}= props;
+
 
     return(
-        <React.Fragment>
+        <div className='d-flex flex-row justify-content-start align-items-center'>
 
-             <Field component={formCheckBox} id={id} name={name}/>
+             <Field component={formCheckBox} id={id} name={name} userDetails={userDetails} rotationangle={rotationangle} whenClicked={whenClicked} normalize={value=> rotationangle || value } />
 
              <label style={{marginLeft:'15px'}} htmlFor={id}>
 
@@ -284,7 +301,24 @@ export const FormCheckBox= props=>{
 
             </label>
 
-        </React.Fragment>
+        </div>
     )
 }
 
+
+
+export const formTextArea=( {input,rows,id})=>{
+
+
+         return( 
+
+             <React.Fragment>
+
+                <textarea className='textArea' {...input} rows={rows} id={id} style={{width:'100%', padding:'20px 0 0 20px'}}>
+                
+                </textarea>
+
+            </React.Fragment>
+         )
+
+}

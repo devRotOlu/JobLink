@@ -7,15 +7,19 @@ import {Field, reduxForm} from 'redux-form';
 import { connect } from 'react-redux';
 
 
-import {nextBtnClicked, submitBtnClicked,createUser} from '../actions/actions';
-import {formFileInput,
+import {nextBtnClicked, 
+        submitBtnClicked,
+        createUser,
+        getResponse,
+        unClickNextBtnClicked,
+        unClickSubmitBtnClicked} from '../actions/actions';
+
+import {
         formInput,
         formSelect,
         FormSelect,
         FormInput,
         FormFileInput} from './accessories/formComponents';
-
-
 import {daysOption,
         monthOption,
         yearOption,
@@ -29,6 +33,7 @@ import {daysOption,
         jobFunctionOptions} from './accessories/selectOptions';
 import{ FlexSectioning} from './accessories/flexSectioning';
 import {userSignUpValidation} from './accessories/validate'
+import jsonServerAxios from '../apis/jsonServerAxios';
 
 
  
@@ -39,28 +44,97 @@ class Signup extends React.Component{
         super(props)
 
         this.secondFormSection= React.createRef();
-
+        this.loginError=React.createRef();
     };
 
     handleSubmitClick=()=>{
 
         if (this.errors) {
 
-            this.props.submitBtnClicked()
+               this.props.submitBtnClicked()
         }
-
     }
 
+    componentWillUnmount(){
+
+        this.props.unClickNextBtnClicked();
+        this.props.unClickSubmitBtnClicked();
+    }
+
+    // componentDidMount(){
+    //     console.log(this.secondFormSection.current.getBoundingClientRect().height)
+
+    // }
 
     
     onSubmit=(formValues,dispatch,props)=>{
 
-        var {First_Name,Last_Name,Birth_Date}= formValues
+        var {First_Name,Last_Name,Birth_Date}= formValues;
 
+        const formEmail= formValues.Email_Address;
 
-        const userId= First_Name.slice(0,2).concat(Last_Name.slice(0,2),Birth_Date)
+        var emailServerValidation;
 
-        this.props.createUser({...formValues,userId})
+        this.loginError.current.classList.remove('animate');
+
+        clearInterval(this.runAnimation);
+
+        jsonServerAxios.get(`/Accounts`).then(
+
+            response=> {
+
+                emailServerValidation= response.data.some(object=>object.Email_Address===formEmail);
+
+                if (!emailServerValidation) {
+
+                    const userId= First_Name.slice(0,2).concat(Last_Name.slice(0,2),Birth_Date);
+                  
+                    this.props.getResponse('Sucessful Registration!');
+
+                    this.props.createUser({...formValues,userId});
+
+                    this.loginError.current.classList.add('animate');
+                 
+                    setTimeout(() => {
+
+                        this.loginError.current.style.animationPlayState = 'paused';
+
+                        this.runAnimation=setInterval(() => {
+
+                            this.loginError.current.style.animationPlayState = 'running'
+                            
+                        }, 10000);
+                            
+                    }, 1900); 
+
+                    this.props.history.replace('/signin')
+                                               
+                            
+                }else{
+        
+                    this.props.getResponse('This Email has been Registered. Failed Registration!')
+
+                    this.loginError.current.classList.add('animate')
+        
+                    setTimeout(() => {
+
+                        this.loginError.current.style.animationPlayState = 'paused';
+
+                        this.runAnimation=setInterval(() => {
+
+                            this.loginError.current.style.animationPlayState = 'running'
+                            
+                        }, 10000);
+                            
+                    }, 1900);                 
+        
+                }
+        
+
+            }
+        )
+
+        
 
         // // formValues.append('file',this.files)
         // console.log(formValues,'formValues')
@@ -85,6 +159,12 @@ class Signup extends React.Component{
 
     }
 
+    handleDismissClick=()=> this.loginError.current.style.animationPlayState = 'running';
+
+       
+
+
+
     handleClick=()=>{
 
         let {formValues}=this.props;
@@ -92,8 +172,10 @@ class Signup extends React.Component{
         this.errors=this.props.validate(formValues);
 
         if (Object.keys(this.errors).length<6) {
+            
+            const scrollPosition= this.secondFormSection.current.getBoundingClientRect().height + 300
 
-            window.scrollTo(0,700);
+            window.scrollTo(0,scrollPosition );
 
             this.secondFormSection.current.style.opacity='1';
 
@@ -106,16 +188,16 @@ class Signup extends React.Component{
         this.props.nextBtnClicked();
 
     }
- 
+
     render() {
 
 
-        const {isClick, handleSubmit, submitClicked}= this.props;
-
+        const {isClick, handleSubmit, submitClicked,response}= this.props;
 
         
         return (
-            <div className='conatiner-fluid d-flex flex-column align-items-center'>
+
+            <div className='conatiner-fluid d-flex flex-column align-items-center' style={{position:'relative'}}>
 
                 <div  className='mt-3 d-flex flex-column justify-content-center'>
                     <h3 className='mt-3'>Create an Account</h3>
@@ -124,33 +206,35 @@ class Signup extends React.Component{
 
                 <form  style={{width:'95%'}} onSubmit={handleSubmit(this.onSubmit)}> 
 
-                    <div className='card d-flex flex-column  my-4'>
+                    <div className='card d-flex flex-column mt-4 mb-2 px-0'>
 
-                        <div className='d-flex flex-sm-row flex-column justify-content-sm-around  align-items-center align-items-sm-start  pt-4'>
+                        <div className='row  pt-4 justify-content-center justify-content-sm-around mx-auto' style={{width:'100%'}}>
 
-                            <div className='flex-sm-grow-0 flex-grow-1 w-25' >
+                            <div className='col-sm-3 col-12' >
                                 
                                 <h4>PERSONAL INFORMATION</h4>
 
-                                <p>
-                                    Information required here are those partaining to you as an individual
+                                <p >
+                                    Information required here are those partaining to you as an individual 
                                 </p>
+                        
 
                             </div>
 
-                            <div className='flex-sm-grow-0 flex-grow-1 mt-4 mt-sm-0' style={{width:'70%'}}>
+                            <div className='col-sm-8 col-12 col-12 mt-sm-0 mt-4 px-0'>
 
                                 <div className='d-flex flex-column' 
-                                style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>
+                                style={{borderBottom:'solid grey thin'}}>
 
                                     <FlexSectioning>  
 
-                                        <div className='flex-sm-grow-0 flex-grow-1 mb-sm-0 mb-3' style={{width:'45%'}}>
+                                        <div className='col-sm-6 mb-sm-0 mb-4' >
 
                                             <Field nextBtnClicked={isClick} name='First_Name' component={formInput} type='text' holder='First Name' />
 
                                         </div>
-                                        <div className='flex-sm-grow-0 flex-grow-1' style={{width:'45%',}}>
+
+                                        <div className='col-sm-6'>
 
                                             <Field name='Last_Name' component={formInput} type='text' holder='Last Name'/>
 
@@ -161,11 +245,11 @@ class Signup extends React.Component{
                                     
                                     <FlexSectioning>  
 
-                                        <div className='flex-sm-grow-0 flex-grow-1 mb-sm-0 mb-3' style={{width:'45%'}}>
+                                        <div className='col-sm-6 mb-sm-0 mb-4'>
                                             <Field nextBtnClicked={isClick} name='Email_Address' component={formInput} type='text' holder='Email Address'/>
                                         </div>
 
-                                        <div className='flex-sm-grow-0 flex-grow-1' style={{width:'45%'}}>
+                                        <div className='col-sm-6'>
 
                                             <div>
 
@@ -182,21 +266,21 @@ class Signup extends React.Component{
                                 </div>
 
                                 
-                                <div className='d-flex flex-column pt-4' style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>
+                                <div className='d-flex flex-column' style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>
 
-                                        <h5 className='ms-4'style={{color:'grey', fontSize:'16px'}}>Date of birth</h5>
+                                        <h5 className='mt-4'style={{color:'grey', fontSize:'16px', paddingLeft:'11px'}}>Date of birth</h5>
 
                                     <FlexSectioning>  
 
-                                        <div className='mb-sm-0 mb-3' style={{width:'30%'}} >
+                                        <div className='col-sm-4 mb-sm-0 mb-3 '>
                                             <Field nextBtnClicked={isClick} name='Birth_Date' component={formSelect} options={daysOption} />
                                         </div>
 
-                                        <div className='mb-sm-0 mb-3' style={{width:'30%'}}>
+                                        <div className='col-sm-4 mb-sm-0 mb-3 '>
                                             <Field nextBtnClicked={isClick} name='Birth_Month' component={formSelect} options={monthOption}/>
                                         </div>
 
-                                        <div style={{width:'30%'}} >
+                                        <div className='col-sm-4'>
                                             <Field nextBtnClicked={isClick} name='Birth_Year' component={formSelect} options={yearOption}/>
                                         </div>
                                 
@@ -205,19 +289,20 @@ class Signup extends React.Component{
                                     <FlexSectioning>  
 
                                         
-                                        <div className='flex-sm-grow-0 flex-grow-1 mb-sm-0 mb-3'style={{width:'30%'}}>
+                                        <div className='col-sm-4 mb-sm-0 mb-3 '>
                             
                                             <FormSelect heading='Gender' name='Gender' options={genderOption}/>
 
                                         </div>
 
-                                        <div className='flex-sm-grow-0 flex-grow-1 mb-sm-0 mb-3'style={{width:'30%'}}>
-                                            
+                            
+                                        <div className='col-sm-4 mb-sm-0 mb-3' >
+
                                             <FormSelect heading='Nationality' name='Nationality' options={nationalityOption}/>
 
                                         </div>
 
-                                        <div  style={{width:'30%'}}>
+                                        <div className='col-sm-4'  >
                                         
                                             <FormSelect heading='Location' name='Location' options={stateOption}/>
 
@@ -229,32 +314,36 @@ class Signup extends React.Component{
                                 </div>
 
                                 
-                                <div className='d-flex flex-sm-row flex-column justify-content-between py-4 px-sm-4' style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>
+                                <div className='d-flex flex-sm-row flex-column justify-content-between pt-4' style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>
 
-                                    <div className='flex-sm-grow-0 flex-grow-1 mb-sm-0 mb-3' style={{width:'45%'}}>
+                                    <FlexSectioning> 
                                     
-                                        <FormSelect heading='Country Code' name='Country_Code' options={countryCodeOption}/>
+                                        <div className='col-sm-6 col-12 mb-sm-0 mb-3'>
+                                        
+                                            <FormSelect heading='Country Code' name='Country_Code' options={countryCodeOption}/>
 
-                                    </div> 
+                                        </div> 
 
-                                    <div style={{width:'45%'}}>
+                                        <div className='col-sm-6 col-12'>
 
-                                         <FormInput nextBtnClicked={isClick} heading=" Mobile Number" name='Mobile_Number' type='number' id='Mobile_Number'/>
-                                         
-                                    </div>
+                                            <FormInput nextBtnClicked={isClick} heading=" Mobile Number" name='Mobile_Number' type='number' id='Mobile_Number'/>
+                                            
+                                        </div>
+
+                                    </FlexSectioning>
                                     
                                 </div>
 
-                                <div className='my-4 ms-auto' style={{width:'fit-Content'}}>
+                                <div className='d-flex justify-content-sm-end my-4 px-sm-0 p-3' style={{width:'100%'}}>
 
-                                    <span onClick={this.handleClick} style={{display:'flex', height:'50px', width:'150px', border:'solid thin grey', borderRadius:'5px', cursor:'pointer'}}>
+                                    <div className='flex-sm-grow-0 flex-grow-1 mx-sm-3 d-flex flex-row  justify-content-stretch align-items-center' onClick={this.handleClick} style={{display:'flex', height:'50px', border:'solid thin grey', borderRadius:'5px', cursor:'pointer', minWidth:'130px'}}>
 
-                                        <span style={{width:'60%', backgroundColor:'black', color:'white', height:'100%', lineHeight:'50px', fontSize:'22px', textAlign:'center'}}>NEXT</span>
-                                        <span style={{display:'inline-flex', width:'40%', height:'100%', alignItems:'center', justifyContent:'center'}}>
+                                        <span  style={{backgroundColor:'black', color:'white',fontSize:'22px',width:'55%',height:'100%', lineHeight:'50px', textAlign:'center'}}>NEXT</span>
+                                        <span className='bg-light d-block d-flex justify-content-center align-items-center ' style={{width:'45%',height:'100%',borderRadius:'5px'}} >
                                             <FontAwesomeIcon icon={faArrowDown}  size='2x'/>
                                         </span>
 
-                                    </span>
+                                    </div>
 
                                 </div>
 
@@ -269,32 +358,33 @@ class Signup extends React.Component{
 
                     <div ref={this.secondFormSection} className='formSecondSectn card d-flex flex-sm-row flex-column mb-5' style={{cursor:'pointer'}}>
 
-                        <div className='d-flex flex-sm-row flex-column justify-content-sm-around  align-items-center align-items-sm-start  pt-4' style={{width:'100%'}}>
+                        <div className='row pt-4 justify-content-sm-around mx-auto px-0' style={{width:'100%'}}>
 
-                            <div style={{width:'25%'}}>
+                            <div className='col-sm-3 col-12'>
 
                                 <h4>
                                     Work Information
                                 </h4>
-                                <p>
-                                    Information required here is your past work experience and your qualifications
+                                <p className='d-sm-block d-inline'>
+                                    Information required here is your past work experience and your qualifications  
                                 </p>
+                                
 
                             </div>
 
-                            <div className='flex-sm-grow-0 flex-grow-1 mt-4 mt-sm-0' style={{width:'70%'}}>
+                            <div className='col-sm-8 col-12 mt-4 mt-sm-0 px-0'>
 
                                 <div className='d-flex flex-column' 
                                 style={{ boxSizing:'borderBox', borderBottom:'solid grey thin'}}>                              
                                         <FlexSectioning>
 
-                                            <div className='flex-sm-grow-0 flex-grow-1  mb-sm-0 mb-3' style={{width:'45%'}}> 
+                                            <div className='col-sm-6 col-12 mb-sm-0 mb-3' > 
                                             
                                                 <FormSelect heading='Highest Qualification' name='Highest_Qualification' options={qualificationOption} submitClicked={submitClicked}/>
 
                                             </div>
 
-                                            <div className='flex-sm-grow-0 flex-grow-1 ' style={{width:'45%'}}>
+                                            <div className='col-sm-6 col-12'>
 
                                                 <FormSelect heading='Current Job Function' name='Current_Job' options={jobFunctionOptions} submitClicked={submitClicked}/>
 
@@ -305,13 +395,13 @@ class Signup extends React.Component{
                                         <FlexSectioning>
 
 
-                                            <div className='flex-sm-grow-0 flex-grow-1  mb-sm-0 mb-3' style={{width:'45%'}}>
+                                            <div className='col-sm-6 col-12 mb-sm-0 mb-3'>
 
                                                 <FormSelect heading='Years of Experience' name='Experience' options={experienceOption} submitClicked={submitClicked}/>
 
                                             </div>
 
-                                            <div className='flex-sm-grow-0 flex-grow-1' style={{width:'45%'}}>
+                                            <div className='col-sm-6 col-12'>
 
                                                 <FormSelect heading='Availability' name='Availability' options={availabiltyOption} submitClicked={submitClicked}/>
                                                 
@@ -322,7 +412,7 @@ class Signup extends React.Component{
 
                                 </div>
 
-                                <div className='py-4 ps-3' style={{borderBottom:'solid thin grey'}}>
+                                <div className='py-4 px-3 mx-auto' style={{borderBottom:'solid thin grey'}}>
                                     
                                     <div style={{height:'40px', paddingLeft:'10px', boxSizing:'borderBox',cursor:'pointer'}}>
 
@@ -330,7 +420,7 @@ class Signup extends React.Component{
                                     
                                     </div>
 
-                                    <p className='mt-3'>Upload a CV not more than 10MB. Files should be Pdf, doc, docx, rtf.</p>
+                                    <p className='mt-3 '>Upload a CV not more than 10MB. Files should be Pdf, doc, docx, rtf.</p>
 
                                 </div>
                                 
@@ -341,18 +431,18 @@ class Signup extends React.Component{
                                     <span>Already have an account?</span>
 
                                     <div className='d-inline ms-2'>
-                                        <Link to='/' style={{color:'turquoise'}}>
+                                        <Link to='/signin' style={{color:'turquoise'}}>
                                           Login
                                         </Link>
                                     </div>
 
                                 </div>
 
-                                <div className='my-4' style={{width:'fit-content', marginLeft:'auto'}} >
-                                    <button onClick={this.handleSubmitClick} className='p-3 bg-dark text-light' style={{borderRadius:'5px'}}>CREATE YOUR ACCOUNT</button>
+                                <div className=' d-flex flex-row justify-content-sm-end my-4 px-sm-0 p-3'>
+                                    <button onClick={this.handleSubmitClick} className='flex-sm-grow-0 flex-grow-1 mx-sm-3 p-3 bg-dark text-light' style={{borderRadius:'5px',boxSizing:'border-box',cursor:'pointer' }}>CREATE YOUR ACCOUNT</button>
                                 </div>
 
-                            </div>
+                            </div>  
 
 
                         </div>
@@ -360,6 +450,20 @@ class Signup extends React.Component{
                     </div>
 
                 </form>
+
+
+                <div ref={this.loginError} className='logInError d-flex flex-row flex-wrap justify-content-center' style={{bottom:'0px'}}>
+
+                    <span className='text-center mt-3'>
+                        {response}
+                    </span> 
+                    <span className='ms-sm-3 my-3 ' onClick={this.handleDismissClick} style={{color:'tomato', cursor:'pointer'}}>
+                        DISMISS
+                    </span>
+
+                 </div>
+
+
             </div>
  
         );
@@ -374,11 +478,13 @@ const wrappedForm=reduxForm({
 
 const mapSateToProps= state=>{
     
-    var formValues=null
+    var formValues=null;
 
-    if (state.form.accountForm) {
+    const{userDetails,form:{accountForm},response,isClick,submitClicked}=state
 
-        let {values}=state.form.accountForm
+    if (accountForm) {
+
+        let {values}=accountForm
 
         formValues=values
         
@@ -400,16 +506,19 @@ const mapSateToProps= state=>{
             Experience: 'Select',
             Availability:'Select',
             Files:null,
-        },
+        }, 
 
-        isClick:state.isClick,
-        submitClicked:state.submitClicked,
+        isClick,
+        submitClicked,
         formValues: formValues,
+        userDetails,
+        response,
     }
 }
 
 export default connect(mapSateToProps,{
-    nextBtnClicked, submitBtnClicked,createUser
+    nextBtnClicked, submitBtnClicked,createUser,getResponse,
+    unClickNextBtnClicked,unClickSubmitBtnClicked
 })(wrappedForm)
 
 

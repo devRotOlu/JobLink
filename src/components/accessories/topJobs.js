@@ -1,7 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
+
 import { getTopJobs } from '../../actions/actions';
 import JobsArray from './jobsArray';
+
 
 
 class TopJobs extends React.Component{
@@ -23,10 +25,10 @@ class TopJobs extends React.Component{
 
                 const {company_name,title,location}= job
         
-                    if (index<10) {
+                    if (index<12) {
         
-                        return <JobsArray key={index} jobsTitle={title} CompanyName={company_name} jobLocation={location} />
-                        
+                        return <JobsArray key={index} jobsTitle={title} CompanyName={company_name} index={index} jobLocation={location} />
+                    
                     }
         
                })
@@ -37,9 +39,10 @@ class TopJobs extends React.Component{
     }
 
     render(){
+        
         return(
             
-            <div className='container-fluid my-5'>
+            <div className='topJob-container container-fluid my-5 mx-auto' style={{width:'90%'}}>
 
                         <div className='row'>
 
@@ -54,7 +57,6 @@ class TopJobs extends React.Component{
 
 const mapStateToProps=state=>{
     
-
     return {topJobs:state.topJobs}
 }
 

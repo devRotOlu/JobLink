@@ -1,3 +1,4 @@
+
 .text{
     color: black;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -11,13 +12,13 @@ p{
   margin: 5px 0;
 }
  
-.circle{
+/* .circle{
     height:8px;
     width:8px;
     background-color: red;
     border: red;
     border-radius: 50%;   
-}
+} */
 
 .nav-item h4:hover{
   color: yellowgreen;
@@ -34,9 +35,6 @@ a{
   color: tomato;
 }
 
-/* a:hover{
-  color: tomato;
-} */
 
 .errorMessage{
  position: relative;
@@ -64,13 +62,21 @@ a{
   outline: none;
 }
 
+.loginField{
+
+  background-color: whitesmoke;
+  border: none;
+  outline: none;
+
+}
+
 .formSecondSectn{
   pointer-events: none;
   opacity:0.7;
 }
 
 .formButton{
-  width:180px;
+  min-width:180px;
   padding: 7px 0;
   color:white;
   border-radius: 5px;
@@ -102,9 +108,188 @@ a{
   width: 100%;
   height: 100%;
 }
-/* .fields:focus{
-  border: solid thin turquoise;
+
+.textArea{
+  border: solid thin grey;
+}
+
+.textArea:focus{
+  border: solid thin grey;
+  outline:blueviolet solid thin !important ;
+}
+
+
+.logInError{
+
+  display:block;
+  width: fit-content;
+  padding:0 1em;
+  background-color: rgba(0, 0,0, 0.7);
+  color: white;
+  font-size: large;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  position: fixed;
+  left: 50%;
+   bottom:0px; 
+  transform: translateX(-50%);
+  opacity: 0;
+  z-index: 1000;
+}
+
+.animate{
+  animation: move 2s linear backwards;
+}
+
+@keyframes move {
+
+  from{
+    opacity: 0;
+  }
+
+  to{
+    opacity: 1;
+    transform: translate(-50%,-200px);
+    display:block;
+  }
+  
+}
+
+
+.circle-wrap {
+  width: 120px;
+  height: 120px;
+  background: white;
+  border-radius: 50%;
+}
+
+
+.circle-wrap .circle .mask,
+.circle-wrap .circle .fill {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.circle-wrap .circle .mask {
+
+  clip: rect(0px, 120px, 120px, 60px);
+
+}
+
+.circle-wrap .circle .mask .fill {
+  clip: rect(0px, 60px, 120px, 0px);
+  background-color: tomato;
+}
+
+
+.circle-wrap .circle .mask.full,
+.circle-wrap .circle .fill {
+
+  transition: all 2s;
+
+} 
+
+
+.circle-wrap .inside-circle {
+  width:100px;
+  height:100px;
+  border-radius: 50%;
+  background:blue;
+  margin-top: 10px;
+  margin-left: 10px;
+  position: absolute;
+  color: white;
+  z-index: 100;
+  font-weight: 700;
+  font-size: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} 
+
+.nav-link{
+  color:black;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.nav-link:hover{
+  color:white !important;
+  padding: 10px;
+  background-color:blue;
+}
+
+.brand{
+  font-size:'22px';
+}
+
+
+.newModal{
+  height: fit-content;
+  width:100%;
+  position:absolute ;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(211, 211,211, 0.7);
+  /* align-items: center; */
+  /* background-color: teal;  */
+}
+
+.modalBody{
+  padding: 2em; 
+  height: fit-content;
+}
+
+.modalContainer{
+  margin-bottom: 30px;
+}
+
+.deletePrompt{
+  display: none;
+}
+
+@media (max-width:1000px) {
+
+  .topJob-container{
+    width: 100% !important;
+  }
+  
+}
+
+@media (max-width:800px) {
+  .modalContainer{
+    width:90% !important;
+  }
+
+  .signUpForm{
+    width: 90% !important;
+    margin: auto !important;
+  }
+
+}
+
+/* @media (max-width:900px) {
+
+  .topJob-container{
+    width: 95% !important;
+  }
+  
 } */
+
+@media (max-width:600px) {
+
+  .logInError{
+    width: 60%;
+  }
+  
+}
+
+
 
 
 

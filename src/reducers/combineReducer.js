@@ -6,7 +6,10 @@ import { nextBtnClIckState,
          passTopJobs,
          submitBtnClickState,
          userInfo,
-         getUserInfo} from "./reducers";
+         verifyUserInfo,
+         getUserInfo,
+         passResponse,
+         getRotationAngle} from "./reducers";
  
 export default combineReducers({
     form:formReducer,
@@ -15,5 +18,8 @@ export default combineReducers({
     isClick:nextBtnClIckState,
     submitClicked:submitBtnClickState,
     user:userInfo,
-    myInfo:getUserInfo,
+    myInfo:verifyUserInfo,
+    userDetails:getUserInfo,
+    response:passResponse,
+    rotationAngle:getRotationAngle,
 })

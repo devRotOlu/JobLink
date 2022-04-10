@@ -16,10 +16,9 @@ class SearchJobs extends React.Component{
 
         const {input,options}= props
       
-        // console.log(props)
     
         return  (
-                <select className='mb-4'{...input} style={{width:'250px', height:'47px', padding:'10px', fontWeight:'bold'}} value={input.value}>
+                <select {...input} className='flex-grow-1 flex-sm-grow-0' style={{width:'250px', height:'47px', padding:'10px', fontWeight:'bold'}} value={input.value}>
     
                     {options()}
         
@@ -74,10 +73,11 @@ class SearchJobs extends React.Component{
 
                     <form onSubmit={handleSubmit(this.onSubmit)} id='jobForm' className='container my-4 d-flex flex-column flex-wrap flex-sm-row justify-content-around align-items-center'>
                     
-                    <Field name='jobType' component={this.formSelect} options={jobFunctionOptions}  label='All Job Functions'/>
-                    
-                    <Field name='jobLocation' component={this.formSelect} options={stateOptions}/>
-                    <button className='btn btn-lg btn-success text-white mb-4'>Search</button>
+                        <Field name='jobType' component={this.formSelect} options={jobFunctionOptions}  label='All Job Functions'/>
+                        
+                        <Field name='jobLocation' component={this.formSelect} options={stateOptions}/>
+
+                        <button className='btn btn-lg btn-success text-white'>Search</button>
 
                     </form>
 
@@ -100,16 +100,19 @@ class SearchJobs extends React.Component{
         return(
 
             <React.Fragment>
-                <form onSubmit={handleSubmit(this.onSubmit)} id='jobForm' className='container my-4 d-flex flex-column flex-wrap flex-sm-row justify-content-around align-items-center'>
 
-                    <div>
-                        <Field name='jobType' component={this.formSelect} options={jobFunctionOptions}  id={'jobForm'}/>
-                    </div>
+                <form style={{height:'200px'}} onSubmit={handleSubmit(this.onSubmit)} id='jobForm' className='container my-4 d-flex flex-wrap flex-row  align-content-around justify-content-center justify-content-sm-around'>
+
+                    
+                    <Field  name='jobType' component={this.formSelect} options={jobFunctionOptions}  id={'jobForm'}/>
+                   
 
                     <Field name='jobLocation' component={this.formSelect} options={stateOptions}  id={'jobForm'}/>
 
-                    <button className='btn btn-lg btn-success text-white mb-4'>Search</button>
+                    <button className='flex-grow-1 flex-sm-grow-0 btn btn-lg btn-primary text-white' style={{width:'250px'}}>Search</button>
+
                 </form>
+
             </React.Fragment>
         )
     }

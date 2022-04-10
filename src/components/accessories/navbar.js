@@ -11,98 +11,56 @@ class Navbar extends React.Component {
 
     return (
 
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className=" d-flex flex-row justify-content-around ">
-          <Link  className="navbar-brand" to='/'><h1 className='display-3'>JobLink</h1></Link>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                 <Link  className="nav-link active" aria-current="page" to='/'>
-                   <h4 className='h4' style={{color:'yellowGreen'}}>Home</h4>
-                  </Link>
-              </li>
-              <li className="nav-item">
-                
-                <Link  className="nav-link" to='/signin'><h4 className='h4'>Sign In</h4></Link>
+      <nav className="navbar  navbar-expand-lg navbar-light bg-light" style={{backgroundColor:'green'}}>
+      <div className="container-fluid">
+        <Link className="navbar-brand ms-3" to='/' style={{fontSize:'50px'}}>JobLink</Link>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-lg-inline-flex d-none" style={{opacity:'0'}} >
+            <li className="nav-item">
+              <a className="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">Link</a>
+            </li>
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown
+              </a>
+              <ul className="dropdown-menu d-flex" aria-labelledby="navbarDropdown">
+                <li><a className="dropdown-item" href="#">Action</a></li>
+                <li><a className="dropdown-item" href="#">Another action</a></li>
+                <li><hr className="dropdown-divider"/></li>
+                <li><a className="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+           
+          </ul>
+          <div className=''>
 
-              </li>
-              <li className="nav-item">
-                <Link  className="nav-link" to='/signup'><h4 className='h4'>Sign Up</h4></Link>
-              </li>
-            </ul>
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-lg-row"  >
+
+                <li className="nav-item me-lg-5 d-flex flex-row justify-content-center align-items-center d-lg-inline-flex mt-lg-0 mt-2 ">
+                  <Link className="nav-link flex-grow-1 text-center" to='/' style={{minWidth:'fit-content'}} >Home</Link>
+                </li>
+                <li className="nav-item me-lg-5 d-flex flex-row justify-content-center align-items-center d-lg-inline-flex">
+                  <Link className="nav-link flex-grow-1 text-center" to='/signin'>Sign In</Link>
+                </li>
+                <li className="nav-item me-lg-5 d-flex flex-row justify-content-center align-items-center d-lg-inline-flex">
+                  <Link className="nav-link flex-grow-1 text-center" to='/signup' >Sign Up</Link>
+                </li>
+
+              </ul>
+
           </div>
         </div>
-      </nav>
+      </div>
+    </nav>
     
     );
   }
 }
 export default Navbar;
 
-/*
-<form className="d-flex">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-              <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-
-/* 
-            <nav className="container-fluid navbar navbar-expand-lg navbar-light sticky-top">
-
-                <div>
-                    <a className="navbar-brand" href="/">
-
-                    <div style={{position:'relative'}}>
-
-                        <FontAwesomeIcon icon={faBriefcase} style={{position:"absolute", marginTop:'28px'}}/>
-
-                        <span style={{ color: "red", fontSize: "50px", fontWeight: "bold", marginLeft:'10px' }}>
-                        Joblink
-                        </span>
-
-                        <span style={{ color: "red", fontSize: "25px", fontWeight: "bold",  }}>
-                        .
-                        </span>
-
-                    </div>
-
-                    </a>
-                </div>
-                
-                {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
-                    <span className="navbar-toggler-icon"></span>
-                </button> */
-        
-            //     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
-            //         <ul className="navbar-nav ml-auto my-20 ">
-
-            //             <li className="nav-item active">
-            //             <a className="nav-link" href="#">
-            //                 Home <span className="sr-only">(current)</span>
-            //             </a>
-            //             </li>
-            //             <li className="nav-item">
-            //             <a className="nav-link" href="#">
-            //                 Employers
-            //             </a>
-            //             </li>
-            //             <li className="nav-item">
-            //             <a className="nav-link" to="/signin">
-            //                 Login <span className="sr-only">(current)</span>
-            //             </a>
-                        
-            //             </li>
-            //             <li className="nav-item">
-            //             <NavLink className="nav-link btn btn-danger" to="/signup">
-            //                 Signup
-            //             </NavLink>
-            //             </li>
-
-            //         </ul>
-                    
-            //     </div>
-            // </nav> */}
