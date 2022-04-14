@@ -1,14 +1,32 @@
 
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css'
+import { connect } from "react-redux";
 
+import {removeUser} from '../../actions/actions'
 import '../app.css';
  
-class Navbar extends React.Component {
+const Navbar=({myInfo,removeUser})=> {
 
-  render() {
+  // useEffect(()=>{
+  //   removeUser();
+  //   console.log('in here')
+  // },[])
 
+  const checkIfSignedIn=()=> {
+
+    if (Object.keys(myInfo).length) {
+
+      return '/'
+    
+    }
+
+    return '/signin'
+
+  }
+
+  
     return (
 
       <nav className="navbar  navbar-expand-lg navbar-light bg-light" style={{backgroundColor:'green'}}>
@@ -46,7 +64,7 @@ class Navbar extends React.Component {
                   <Link className="nav-link flex-grow-1 text-center" to='/' style={{minWidth:'fit-content'}} >Home</Link>
                 </li>
                 <li className="nav-item me-lg-5 d-flex flex-row justify-content-center align-items-center d-lg-inline-flex">
-                  <Link className="nav-link flex-grow-1 text-center" to='/signin'>Sign In</Link>
+                  <Link className="nav-link flex-grow-1 text-center" to={checkIfSignedIn()}>{Object.keys(myInfo).length? 'Sign Out' : 'Sign In'}</Link>
                 </li>
                 <li className="nav-item me-lg-5 d-flex flex-row justify-content-center align-items-center d-lg-inline-flex">
                   <Link className="nav-link flex-grow-1 text-center" to='/signup' >Sign Up</Link>
@@ -60,7 +78,17 @@ class Navbar extends React.Component {
     </nav>
     
     );
-  }
 }
-export default Navbar;
+
+const mapStateToProps=({myInfo})=>{
+
+  return{
+    myInfo
+  }
+
+}
+
+export default connect(mapStateToProps,{
+  removeUser
+}) (Navbar);
 

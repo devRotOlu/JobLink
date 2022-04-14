@@ -18,6 +18,7 @@ import Footer from './accessories/footer';
 import Education from './accessories/viewEducationInfo';
 import Experience from './accessories/viewExperienceInfo';
 import JobPage from './jobPage';
+import CheckIfSignedIn from './accessories/checkIfSignedIn'
 import './app.css';
 
 
@@ -78,7 +79,7 @@ class App extends React.Component{
                         <Route exact path='/userpage/userWorkInfo/:id/:userId' render={props=><UserWorkInfo experienceProp={this.experienceProp} {...props} resetProp={this.resetProp}/> }/>
                         <Route exact path='/userpage/education/:id/:userId' render={props=><Education getProp={this.getProp} {...props} />}/>
                         <Route exact path='/userpage/experience/:id/:userId' render={props=><Experience getProp={this.getProp} {...props}/>}/>
-                        <Route exact path='/joblink/jobpage/:index'render={props=><JobPage {...props} />}></Route>
+                        <Route exact path='/joblink/jobpage/:index' render={props=> <CheckIfSignedIn {...props}><JobPage/><JobPage/></CheckIfSignedIn>}/>
                         
                     </Switch>
                     

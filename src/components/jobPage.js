@@ -7,8 +7,6 @@ import {faBriefcase} from '@fortawesome/free-solid-svg-icons';
 import { getTopJobs } from '../actions/actions';
 
 
- 
-
 
 const JobPage= ({job,...props})=>{
 
@@ -62,7 +60,7 @@ const JobPage= ({job,...props})=>{
 
                         <div className='py-4' style={{borderBottom:'solid thin grey'}}>
 
-                        <div className='mx-3'>
+                            <div className='mx-3'>
 
                                 <h6 className='mb-3' style={{fontWeight:'bold'}}>Job Description/Requirements</h6>
 
@@ -89,7 +87,7 @@ const JobPage= ({job,...props})=>{
 }
 
 
-const mapStateToProps=({topJobs},{match:{params:{index}}})=>{
+const mapStateToProps=({topJobs},{index})=>{
 
     const job=topJobs[index]? topJobs[index]: {};
 

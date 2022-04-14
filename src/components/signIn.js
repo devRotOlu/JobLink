@@ -21,6 +21,11 @@ class SignUp extends React.Component {
         this.loginError=React.createRef();;
     }
 
+    componentDidMount(){
+
+        window.scrollTo(0,10);
+        
+    }
 
     renderInput=({type,placeholder,input})=>{
 

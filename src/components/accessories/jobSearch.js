@@ -11,7 +11,6 @@ import JobsArray from './jobsArray';
 
 class SearchJobs extends React.Component{
 
-
     formSelect=(props)=>{
 
         const {input,options}= props
@@ -57,7 +56,6 @@ class SearchJobs extends React.Component{
         this.props.getSearchTerm(jobType,jobLocation);
             
     }
-
 
 
     render(){
